@@ -14,11 +14,11 @@ import { BaseLayerOptions, GroupLayerOptions } from "ol-layerswitcher";
 
 const layers = [
   new TileLayer({
-    title: "Base",
+    title: "Modern Charlotte",
     source: new OSM()
   }),
   new ImageLayer({
-    title: "Raster",
+    title: "Raster BluePrint",
     source: new ImageWMS({
       url: "http://virtualblackcharlotte.net/geoserver/Charlotte/wms",
       params: { LAYERS: "Charlotte:jcsured0102bk03_ST_4" },
