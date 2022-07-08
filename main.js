@@ -3,7 +3,8 @@ import "ol-layerswitcher/dist/ol-layerswitcher.css";
 
 import Map from "ol/Map";
 import OSM from "ol/source/OSM";
-import TileLayer from "ol/layer/Tile";
+import ImageWMS from "ol/source/ImageWMS";
+import { Image as ImageLayer, Tile as TileLayer } from "ol/layer";
 import TileWMS from "ol/source/TileWMS";
 import View from "ol/View";
 import Overlay from "ol/Overlay";
@@ -13,7 +14,17 @@ import { BaseLayerOptions, GroupLayerOptions } from "ol-layerswitcher";
 
 const layers = [
   new TileLayer({
+    title: "Base",
     source: new OSM()
+  }),
+  new ImageLayer({
+    title: "Raster",
+    source: new ImageWMS({
+      url: "http://virtualblackcharlotte.net/geoserver/Charlotte/wms",
+      params: { LAYERS: "Charlotte:jcsured0102bk03_ST_4" },
+      ratio: 1,
+      serverType: "geoserver"
+    })
   }),
   new TileLayer({
     title: "Blocks",
