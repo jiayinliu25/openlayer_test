@@ -7,11 +7,13 @@ import ImageWMS from "ol/source/ImageWMS";
 import { Image as ImageLayer, Tile as TileLayer } from "ol/layer";
 import TileWMS from "ol/source/TileWMS";
 import View from "ol/View";
-import Overlay from "ol/Overlay";
+import { getRenderPixel } from "ol/render";
 
 import LayerSwitcher from "ol-layerswitcher";
 import { BaseLayerOptions, GroupLayerOptions } from "ol-layerswitcher";
+import XYZ from "ol/source/XYZ";
 
+//toggle multiple wms and rastor layers
 const layers = [
   new TileLayer({
     title: "Modern Charlotte",
@@ -47,6 +49,7 @@ const layers = [
     })
   })
 ];
+
 const map = new Map({
   layers: layers,
   target: "map",
@@ -60,3 +63,55 @@ const layerSwitcher = new LayerSwitcher({
   groupSelectStyle: "group"
 });
 map.addControl(layerSwitcher);
+
+//map swipe example
+const osm = new TileLayer({
+  title: "Modern Charlotte",
+  source: new OSM()
+});
+const light = new TileLayer({
+  title: "test map",
+  source: new XYZ({
+    url:
+      "https://api.maptiler.com/maps/topo/{z}/{x}/{y}.png?key=PPplib6pjH9Uo90NGbF4"
+  })
+});
+
+const map2 = new Map({
+  layers: [osm, light],
+  target: "map2",
+  view: new View({
+    center: [-8999036, 4193671],
+    zoom: 16
+  })
+});
+const swipe = document.getElementById("swipe");
+
+light.on("prerender", function (event) {
+  const ctx = event.context;
+  const mapSize = map2.getSize();
+  const width = mapSize[0] * (swipe.value / 100);
+  const tl = getRenderPixel(event, [width, 0]);
+  const tr = getRenderPixel(event, [mapSize[0], 0]);
+  const bl = getRenderPixel(event, [width, mapSize[1]]);
+  const br = getRenderPixel(event, mapSize);
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(tl[0], tl[1]);
+  ctx.lineTo(bl[0], bl[1]);
+  ctx.lineTo(br[0], br[1]);
+  ctx.lineTo(tr[0], tr[1]);
+  ctx.closePath();
+  ctx.clip();
+});
+light.on("postrender", function (event) {
+  const ctx = event.context;
+  ctx.restore();
+});
+
+const listener = function () {
+  map2.render();
+};
+swipe.addEventListener("input", listener);
+swipe.addEventListener("change", listener);

@@ -9,12 +9,29 @@
     <script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=fetch,requestAnimationFrame,Element.prototype.classList,TextDecoder"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/3.18.3/minified.js"></script>
     <script src="https://unpkg.com/ol-layerswitcher@3.8.3"></script>
+    <script
+      type="text/javascript"
+      src="https://code.jquery.com/jquery-1.11.0.min.js"
+    ></script>
     <link
       rel="stylesheet"
       href="https://unpkg.com/ol-layerswitcher@3.8.3/dist/ol-layerswitcher.css"
     />
+    <!-- ol-ext -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.rawgit.com/Viglino/ol-ext/master/dist/ol-ext.min.css"
+    />
+    <script
+      type="text/javascript"
+      src="https://cdn.rawgit.com/Viglino/ol-ext/master/dist/ol-ext.min.js"
+    ></script>
     <style>
       .map {
+        width: 80%;
+        height: 500px;
+      }
+      .map2 {
         width: 80%;
         height: 500px;
       }
@@ -22,6 +39,8 @@
   </head>
   <body>
     <div id="map" class="map"></div>
+    <div id="map2" class="map"></div>
+    <input id="swipe" type="range" style="width: 100%;" />
     <script src="main.js"></script>
   </body>
 </html>
