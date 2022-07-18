@@ -86,7 +86,10 @@ const opacity_block = new TileLayer({
   extent: [-13884991, 2870341, -7455066, 6338219],
   source: new TileWMS({
     url: "http://virtualblackcharlotte.net/geoserver/Charlotte/wms",
-    params: { LAYERS: "Charlotte:Blocks", TILED: true },
+    params: {
+      LAYERS: "Charlotte:Blocks",
+      TILED: true
+    },
     serverType: "geoserver",
     // Countries have transparency, so do not fade tiles:
     transition: 0
@@ -99,7 +102,10 @@ const opacity_building = new TileLayer({
   extent: [-13884991, 2870341, -7455066, 6338219],
   source: new TileWMS({
     url: "http://virtualblackcharlotte.net/geoserver/Charlotte/wms",
-    params: { LAYERS: "Charlotte:Buildings", TILED: true },
+    params: {
+      LAYERS: "Charlotte:Buildings",
+      TILED: true
+    },
     serverType: "geoserver"
   })
 });
@@ -148,3 +154,93 @@ const layerSwitcher_map2 = new LayerSwitcher({
   groupSelectStyle: "group"
 });
 map2.addControl(layerSwitcher_map2);
+//map3: toggle CQL filtered WMS layer
+const base_osm = new TileLayer({
+  title: "Modern Charlotte",
+  source: new OSM()
+});
+const block_3 = new TileLayer({
+  title: "Blocks",
+  extent: [-13884991, 2870341, -7455066, 6338219],
+  source: new TileWMS({
+    url: "http://virtualblackcharlotte.net/geoserver/Charlotte/wms",
+    params: { LAYERS: "Charlotte:Blocks", TILED: true },
+    serverType: "geoserver",
+    // Countries have transparency, so do not fade tiles:
+    transition: 0
+  })
+});
+block_3.setOpacity(0.4);
+const building_3d = new TileLayer({
+  title: "Dilapidated ",
+  extent: [-13884991, 2870341, -7455066, 6338219],
+  source: new TileWMS({
+    url: "http://virtualblackcharlotte.net/geoserver/Charlotte/wms",
+    params: {
+      LAYERS: "Charlotte:Buildings",
+      TILED: true,
+      cql_filter: "Housing_co = 'Dilapidated'"
+    },
+    serverType: "geoserver"
+  })
+});
+const building_3m = new TileLayer({
+  title: "Major Repair",
+  extent: [-13884991, 2870341, -7455066, 6338219],
+  source: new TileWMS({
+    url: "http://virtualblackcharlotte.net/geoserver/Charlotte/wms",
+    params: {
+      LAYERS: "Charlotte:Buildings",
+      TILED: true,
+      cql_filter: "Housing_co = 'Major Repair'"
+    },
+    serverType: "geoserver"
+  })
+});
+const building_3mi = new TileLayer({
+  title: "Minor Repair",
+  extent: [-13884991, 2870341, -7455066, 6338219],
+  source: new TileWMS({
+    url: "http://virtualblackcharlotte.net/geoserver/Charlotte/wms",
+    params: {
+      LAYERS: "Charlotte:Buildings",
+      TILED: true,
+      cql_filter: "Housing_co = 'Minor Repair'"
+    },
+    serverType: "geoserver"
+  })
+});
+const building_3t = new TileLayer({
+  title: "Standard",
+  extent: [-13884991, 2870341, -7455066, 6338219],
+  source: new TileWMS({
+    url: "http://virtualblackcharlotte.net/geoserver/Charlotte/wms",
+    params: {
+      LAYERS: "Charlotte:Buildings",
+      TILED: true,
+      cql_filter: "Housing_co = 'Standard'"
+    },
+    serverType: "geoserver"
+  })
+});
+
+const map3 = new Map({
+  layers: [
+    base_osm,
+    block_3,
+    building_3d,
+    building_3m,
+    building_3mi,
+    building_3t
+  ],
+  target: "map3",
+  view: new View({
+    center: [-8999036, 4193671],
+    zoom: 16
+  })
+});
+const layerSwitcher_map3 = new LayerSwitcher({
+  reverse: true,
+  groupSelectStyle: "group"
+});
+map3.addControl(layerSwitcher_map3);
