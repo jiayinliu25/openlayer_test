@@ -65,9 +65,14 @@ const layerSwitcher = new LayerSwitcher({
 map.addControl(layerSwitcher);
 
 //map swipe example
-const osm = new TileLayer({
-  title: "Modern Charlotte",
-  source: new OSM()
+const osm = new ImageLayer({
+  title: "Raster BluePrint",
+  source: new ImageWMS({
+    url: "http://virtualblackcharlotte.net/geoserver/Charlotte/wms",
+    params: { LAYERS: "Charlotte:jcsured0102bk03_ST_4" },
+    ratio: 1,
+    serverType: "geoserver"
+  })
 });
 const light = new TileLayer({
   title: "test map",
