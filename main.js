@@ -10,7 +10,6 @@ import View from "ol/View";
 import { getRenderPixel } from "ol/render";
 
 import LayerSwitcher from "ol-layerswitcher";
-import { BaseLayerOptions, GroupLayerOptions } from "ol-layerswitcher";
 import XYZ from "ol/source/XYZ";
 
 //toggle multiple wms and rastor layers
@@ -58,13 +57,14 @@ const map = new Map({
     zoom: 16
   })
 });
+//UI for toggle on and off different layers
 const layerSwitcher = new LayerSwitcher({
   reverse: true,
   groupSelectStyle: "group"
 });
 map.addControl(layerSwitcher);
 
-//map swipe example
+//map swipe with raster blue print and modern Charlotte
 const osm = new ImageLayer({
   title: "Raster BluePrint",
   source: new ImageWMS({
@@ -81,9 +81,32 @@ const light = new TileLayer({
       "https://api.maptiler.com/maps/topo/{z}/{x}/{y}.png?key=PPplib6pjH9Uo90NGbF4"
   })
 });
+const opacity_block = new TileLayer({
+  title: "Blocks",
+  extent: [-13884991, 2870341, -7455066, 6338219],
+  source: new TileWMS({
+    url: "http://virtualblackcharlotte.net/geoserver/Charlotte/wms",
+    params: { LAYERS: "Charlotte:Blocks", TILED: true },
+    serverType: "geoserver",
+    // Countries have transparency, so do not fade tiles:
+    transition: 0
+  })
+});
+opacity_block.setOpacity(0.5);
+
+const opacity_building = new TileLayer({
+  title: "Buildings",
+  extent: [-13884991, 2870341, -7455066, 6338219],
+  source: new TileWMS({
+    url: "http://virtualblackcharlotte.net/geoserver/Charlotte/wms",
+    params: { LAYERS: "Charlotte:Buildings", TILED: true },
+    serverType: "geoserver"
+  })
+});
+opacity_building.setOpacity(0.6);
 
 const map2 = new Map({
-  layers: [osm, light],
+  layers: [osm, light, opacity_block, opacity_building],
   target: "map2",
   view: new View({
     center: [-8999036, 4193671],
@@ -91,7 +114,6 @@ const map2 = new Map({
   })
 });
 const swipe = document.getElementById("swipe");
-
 light.on("prerender", function (event) {
   const ctx = event.context;
   const mapSize = map2.getSize();
@@ -120,3 +142,9 @@ const listener = function () {
 };
 swipe.addEventListener("input", listener);
 swipe.addEventListener("change", listener);
+
+const layerSwitcher_map2 = new LayerSwitcher({
+  reverse: true,
+  groupSelectStyle: "group"
+});
+map2.addControl(layerSwitcher_map2);
