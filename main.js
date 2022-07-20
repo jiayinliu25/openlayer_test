@@ -250,47 +250,51 @@ const layerSwitcher_map3 = new LayerSwitcher({
 
 map3.addControl(layerSwitcher_map3);
 
-const layers4 = [
-  new TileLayer({
-    title: "Modern Charlotte",
-    source: new OSM()
-  }),
-  new ImageLayer({
-    title: "Raster BluePrint",
-    source: new ImageWMS({
-      url: "http://virtualblackcharlotte.net/geoserver/Charlotte/wms",
-      params: { LAYERS: "Charlotte:jcsured0102bk03_ST_4" },
-      ratio: 1,
-      serverType: "geoserver"
-    })
-  }),
-  new TileLayer({
-    title: "Blocks",
-    extent: [-13884991, 2870341, -7455066, 6338219],
-    source: new TileWMS({
-      url: "http://virtualblackcharlotte.net/geoserver/Charlotte/wms",
-      params: { LAYERS: "Charlotte:Blocks", TILED: true },
-      serverType: "geoserver",
-      // Countries have transparency, so do not fade tiles:
-      transition: 0
-    })
-  }),
-  new TileLayer({
-    title: "Buildings",
-    extent: [-13884991, 2870341, -7455066, 6338219],
-    source: new TileWMS({
-      url: "http://virtualblackcharlotte.net/geoserver/Charlotte/wms",
-      params: { LAYERS: "Charlotte:Buildings_color", TILED: true },
-      serverType: "geoserver"
-    })
+const base_osm = new TileLayer({
+  title: "Modern Charlotte",
+  source: new OSM()
+});
+const raster_base = new ImageLayer({
+  title: "Raster BluePrint",
+  source: new ImageWMS({
+    url: "http://virtualblackcharlotte.net/geoserver/Charlotte/wms",
+    params: { LAYERS: "Charlotte:jcsured0102bk03_ST_4" },
+    ratio: 1,
+    serverType: "geoserver"
   })
-];
-
+});
+raster_base.setOpacity(0.8);
+const blocks_4 = new TileLayer({
+  title: "Blocks",
+  extent: [-13884991, 2870341, -7455066, 6338219],
+  source: new TileWMS({
+    url: "http://virtualblackcharlotte.net/geoserver/Charlotte/wms",
+    params: { LAYERS: "Charlotte:Blocks", TILED: true },
+    serverType: "geoserver"
+  })
+});
+blocks_4.setOpacity(0.6);
+const building_color = new TileLayer({
+  title: "Buildings",
+  extent: [-13884991, 2870341, -7455066, 6338219],
+  source: new TileWMS({
+    url: "http://virtualblackcharlotte.net/geoserver/Charlotte/wms",
+    params: { LAYERS: "Charlotte:Buildings_color", TILED: true },
+    serverType: "geoserver"
+  })
+});
 const map4 = new Map({
-  layers: layers4,
+  layers: [base_osm, raster_base, blocks_4, building_color],
   target: "map4",
   view: new View({
     center: [-8999036, 4193671],
     zoom: 16
   })
 });
+
+const layerSwitcher_map4 = new LayerSwitcher({
+  reverse: true,
+  groupSelectStyle: "group"
+});
+
+map4.addControl(layerSwitcher_map4);
