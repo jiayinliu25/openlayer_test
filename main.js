@@ -249,3 +249,48 @@ const layerSwitcher_map3 = new LayerSwitcher({
 });
 
 map3.addControl(layerSwitcher_map3);
+
+const layers4 = [
+  new TileLayer({
+    title: "Modern Charlotte",
+    source: new OSM()
+  }),
+  new ImageLayer({
+    title: "Raster BluePrint",
+    source: new ImageWMS({
+      url: "http://virtualblackcharlotte.net/geoserver/Charlotte/wms",
+      params: { LAYERS: "Charlotte:jcsured0102bk03_ST_4" },
+      ratio: 1,
+      serverType: "geoserver"
+    })
+  }),
+  new TileLayer({
+    title: "Blocks",
+    extent: [-13884991, 2870341, -7455066, 6338219],
+    source: new TileWMS({
+      url: "http://virtualblackcharlotte.net/geoserver/Charlotte/wms",
+      params: { LAYERS: "Charlotte:Blocks", TILED: true },
+      serverType: "geoserver",
+      // Countries have transparency, so do not fade tiles:
+      transition: 0
+    })
+  }),
+  new TileLayer({
+    title: "Buildings",
+    extent: [-13884991, 2870341, -7455066, 6338219],
+    source: new TileWMS({
+      url: "http://virtualblackcharlotte.net/geoserver/Charlotte/wms",
+      params: { LAYERS: "Charlotte:Buildings_color", TILED: true },
+      serverType: "geoserver"
+    })
+  })
+];
+
+const map4 = new Map({
+  layers: layers4,
+  target: "map4",
+  view: new View({
+    center: [-8999036, 4193671],
+    zoom: 16
+  })
+});
